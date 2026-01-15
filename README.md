@@ -547,6 +547,7 @@ MIT License - see LICENSE file for details
 - **Author:** Logan Smith / Metaphy LLC
 
 ---
+<img width="1536" height="1024" alt="RestCLI Logo" src="https://github.com/user-attachments/assets/79a9ba28-20ad-4be2-b576-95c2295d798c" />
 
 ## 🌟 Why RestCLI?
 
