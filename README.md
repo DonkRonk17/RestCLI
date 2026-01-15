@@ -1,3 +1,5 @@
+![RestCLI Title Card](branding/RestCLI%20Title.png)
+
 # 🌐 RestCLI - Smart REST API Testing Tool
 
 **Version:** 1.0.0  
