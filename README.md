@@ -544,9 +544,9 @@ MIT License - see LICENSE file for details
 
 - **GitHub Repository:** https://github.com/DonkRonk17/RestCLI
 - **Report Issues:** https://github.com/DonkRonk17/RestCLI/issues
-- **Author:** Logan Smith / Metaphy LLC
 
 ---
+
 <img width="1536" height="1024" alt="RestCLI Logo" src="https://github.com/user-attachments/assets/79a9ba28-20ad-4be2-b576-95c2295d798c" />
 
 ## 🌟 Why RestCLI?
@@ -567,6 +567,12 @@ MIT License - see LICENSE file for details
 
 ---
 
-**Built with ❤️ by the Holy Grail Automation System**
+## 🙏 Credits
+
+Created by **Randell Logan Smith and Team Brain** at [Metaphy LLC](https://metaphysicsandcomputing.com)
+
+Part of the HMSS (Heavenly Morning Star System) ecosystem.
+
+---
 
 **Zero dependencies. Maximum utility. Pure Python.**
