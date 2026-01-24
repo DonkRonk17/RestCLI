@@ -1,0 +1,370 @@
+================================================================================
+RESTCLI CHEAT SHEET v1.1.0
+================================================================================
+
+QUICK START
+-----------
+1. Download: git clone https://github.com/DonkRonk17/RestCLI.git
+2. Navigate: cd RestCLI
+3. First run: python restcli.py --help
+4. Test: python restcli.py get https://api.github.com/zen
+
+================================================================================
+HTTP METHODS
+--------------------------------------------------------------------------------
+
+GET Request:
+  python restcli.py get URL
+  python restcli.py get https://api.github.com/users/octocat
+
+POST Request:
+  python restcli.py post URL -d 'JSON'
+  python restcli.py post https://api.example.com/users -d '{"name": "John"}'
+
+PUT Request (full update):
+  python restcli.py put URL -d 'JSON'
+  python restcli.py put https://api.example.com/users/1 -d '{"name": "Jane"}'
+
+PATCH Request (partial update):
+  python restcli.py patch URL -d 'JSON'
+  python restcli.py patch https://api.example.com/users/1 -d '{"name": "Jane"}'
+
+DELETE Request:
+  python restcli.py delete URL
+  python restcli.py delete https://api.example.com/users/1
+
+================================================================================
+REQUEST OPTIONS
+--------------------------------------------------------------------------------
+
+Headers:
+  -H, --header "Header: Value"
+  
+  Examples:
+    -H "Content-Type: application/json"
+    -H "Accept: application/json" -H "Cache-Control: no-cache"
+
+Request Body:
+  -d, --data 'JSON string'         # Inline JSON
+  -f, --data-file path/to/file     # Read from file
+
+  Examples:
+    -d '{"name": "John", "age": 30}'
+    -f request_body.json
+
+Timeout:
+  -t, --timeout SECONDS            # Default: 30
+
+  Examples:
+    -t 60                          # 60 second timeout
+    -t 5                           # Quick 5 second timeout
+
+Verbose Mode:
+  -v, --verbose                    # Show full request/response details
+
+================================================================================
+AUTHENTICATION
+--------------------------------------------------------------------------------
+
+Bearer Token (OAuth 2.0):
+  --bearer TOKEN
+  
+  Examples:
+    --bearer abc123xyz
+    --bearer {{TOKEN}}             # Use env variable
+
+Basic Authentication:
+  --basic username:password
+  
+  Examples:
+    --basic admin:secret123
+    --basic {{CREDENTIALS}}        # Use env variable
+
+API Key:
+  --api-key KEY
+  --api-key-header HEADER_NAME     # Default: X-API-Key
+  
+  Examples:
+    --api-key abc123
+    --api-key abc123 --api-key-header "Authorization"
+
+================================================================================
+ENVIRONMENT VARIABLES
+--------------------------------------------------------------------------------
+
+Set Variable:
+  python restcli.py env set KEY VALUE
+  
+  Examples:
+    env set API_URL https://api.example.com
+    env set TOKEN abc123xyz
+    env set VERSION v1
+
+Get Variable:
+  python restcli.py env get KEY
+  
+  Examples:
+    env get TOKEN
+    env get API_URL
+
+List All Variables:
+  python restcli.py env list
+
+Delete Variable:
+  python restcli.py env delete KEY
+  
+  Examples:
+    env delete TOKEN
+
+Using Variables in Requests:
+  Use {{VARIABLE_NAME}} syntax
+  
+  Examples:
+    python restcli.py get {{API_URL}}/users
+    python restcli.py get {{API_URL}}/{{VERSION}}/data --bearer {{TOKEN}}
+
+================================================================================
+REQUEST HISTORY
+--------------------------------------------------------------------------------
+
+View History:
+  python restcli.py history
+  python restcli.py history -l 10     # Last 10 entries
+
+Replay Request:
+  python restcli.py replay NUMBER     # 1 = most recent
+  
+  Examples:
+    replay 1                          # Replay most recent
+    replay 5                          # Replay 5th most recent
+
+History Info:
+  - Stores last 100 requests automatically
+  - Shows: timestamp, method, status, duration, URL
+  - Location: ~/.restcli/history.json
+
+================================================================================
+COLLECTIONS
+--------------------------------------------------------------------------------
+
+Save Last Request:
+  python restcli.py collection save NAME
+  
+  Examples:
+    collection save github_user
+    collection save create_post
+
+List Collections:
+  python restcli.py collection list
+
+Load and Execute:
+  python restcli.py collection load NAME
+  
+  Examples:
+    collection load github_user
+
+Delete Collection:
+  python restcli.py collection delete NAME
+
+Collection Info:
+  - Location: ~/.restcli/collections/
+  - Format: JSON files
+  - Includes: method, url, headers, body
+
+================================================================================
+COMMON WORKFLOWS
+--------------------------------------------------------------------------------
+
+Quick API Test:
+  python restcli.py get https://api.github.com/zen
+
+Authenticated Request:
+  python restcli.py env set TOKEN your_token_here
+  python restcli.py get https://api.example.com/me --bearer {{TOKEN}}
+
+CRUD Operations:
+  # Create
+  python restcli.py post {{API}}/items -d '{"name": "New Item"}'
+  
+  # Read
+  python restcli.py get {{API}}/items/1
+  
+  # Update
+  python restcli.py put {{API}}/items/1 -d '{"name": "Updated"}'
+  
+  # Delete
+  python restcli.py delete {{API}}/items/1
+
+Debug a Request:
+  python restcli.py get https://api.example.com/data -v
+
+Save and Reuse:
+  python restcli.py get https://api.github.com/users/octocat
+  python restcli.py collection save github_octocat
+  python restcli.py collection load github_octocat   # Anytime later
+
+================================================================================
+OUTPUT FORMAT
+--------------------------------------------------------------------------------
+
+Standard Output:
+  STATUS_CODE REASON
+  Time: XXms | Size: X.XX KB
+  
+  {
+    "json": "response"
+  }
+  
+  [OK] Request saved to history
+
+Verbose Output (-v):
+  -> Request
+  METHOD URL
+  
+  Headers:
+    Header: Value
+  
+  Body:
+    {...}
+  
+  <- Response
+  STATUS_CODE REASON
+  Time: XXms
+  Size: X.XX KB
+  
+  Headers:
+    Header: Value
+  
+  Body:
+    {...}
+
+================================================================================
+DATA STORAGE LOCATIONS
+--------------------------------------------------------------------------------
+
+Config Directory: ~/.restcli/
+
+  history.json         # Last 100 requests
+  environment.json     # Environment variables
+  collections/         # Saved request collections
+    collection1.json
+    collection2.json
+
+================================================================================
+INTEGRATION WITH PYTHON
+--------------------------------------------------------------------------------
+
+Basic Usage:
+  import subprocess
+  
+  result = subprocess.run(
+      "python restcli.py get https://api.example.com",
+      shell=True,
+      capture_output=True,
+      text=True
+  )
+  print(result.stdout)
+
+Parse JSON Response:
+  import subprocess
+  import json
+  
+  result = subprocess.run(
+      "python restcli.py get https://api.github.com/users/octocat",
+      shell=True,
+      capture_output=True,
+      text=True
+  )
+  
+  # Find JSON in output (after headers/status)
+  lines = result.stdout.split('\n')
+  json_start = next(i for i, l in enumerate(lines) if l.strip().startswith('{'))
+  json_text = '\n'.join(lines[json_start:])
+  data = json.loads(json_text)
+
+================================================================================
+INTEGRATION WITH TEAM BRAIN TOOLS
+--------------------------------------------------------------------------------
+
+With SynapseLink:
+  # Notify team after API test
+  from synapselink import quick_send
+  
+  result = subprocess.run("python restcli.py get ...", ...)
+  quick_send("TEAM", "API Test Complete", result.stdout)
+
+With AgentHealth:
+  # Track API testing sessions
+  from agenthealth import AgentHealth
+  
+  health = AgentHealth()
+  health.start_session("ATLAS", task="API Testing")
+  # ... run RestCLI commands ...
+  health.end_session("ATLAS")
+
+================================================================================
+TROUBLESHOOTING
+--------------------------------------------------------------------------------
+
+Error: "Connection refused"
+  -> Check URL is correct
+  -> Verify server is running
+  -> Check firewall settings
+
+Error: "Timeout"
+  -> Use -t flag to increase timeout
+  -> Check network connectivity
+  -> Server may be slow/overloaded
+
+Error: "SSL certificate error"
+  -> Check system certificates
+  -> Update Python/certifi
+
+Error: "Invalid JSON"
+  -> Check JSON syntax (quotes, braces)
+  -> Use -f flag for complex payloads
+  -> Validate JSON at jsonlint.com
+
+Error: "401 Unauthorized"
+  -> Check authentication method
+  -> Verify token/credentials
+  -> Check if token expired
+
+Error: "404 Not Found"
+  -> Verify URL path
+  -> Check API documentation
+  -> Confirm resource exists
+
+================================================================================
+KEYBOARD SHORTCUTS (Terminal)
+--------------------------------------------------------------------------------
+
+Ctrl+C          Cancel running request
+Up/Down         Command history
+Tab             Auto-complete (shell-dependent)
+Ctrl+L          Clear screen
+
+================================================================================
+RESOURCES
+--------------------------------------------------------------------------------
+
+Documentation:   AutoProjects/RestCLI/README.md
+Examples:        AutoProjects/RestCLI/EXAMPLES.md
+Integration:     AutoProjects/RestCLI/INTEGRATION_PLAN.md
+GitHub:          https://github.com/DonkRonk17/RestCLI
+Issues:          https://github.com/DonkRonk17/RestCLI/issues
+
+================================================================================
+VERSION INFO
+--------------------------------------------------------------------------------
+
+Version:         1.1.0
+Author:          Logan Smith / Metaphy LLC
+License:         MIT
+Python:          3.6+
+Dependencies:    None (pure stdlib)
+Platforms:       Windows, Linux, macOS
+
+================================================================================
+Built by ATLAS (Team Brain) for Logan Smith / Metaphy LLC
+================================================================================

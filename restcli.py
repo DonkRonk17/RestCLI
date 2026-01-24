@@ -26,7 +26,7 @@ if sys.platform == 'win32':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 # Data storage paths
 DATA_DIR = Path.home() / ".restcli"
@@ -320,7 +320,7 @@ def cmd_request(args):
                 body = f.read()
             body = replace_env_vars(body, env)
         except Exception as e:
-            print(f"{Colors.RED}✗ Error reading file: {e}{Colors.RESET}")
+            print(f"{Colors.RED}[X] Error reading file: {e}{Colors.RESET}")
             return
     
     # Print request info if verbose
@@ -333,7 +333,7 @@ def cmd_request(args):
     
     # Handle errors
     if not response.get('success') and 'error' in response:
-        print(f"\n{Colors.RED}✗ Error: {response['error']}{Colors.RESET}")
+        print(f"\n{Colors.RED}[X] Error: {response['error']}{Colors.RESET}")
         print(f"{Colors.GRAY}Duration: {format_duration(response['duration'])}{Colors.RESET}")
         return
     
@@ -369,7 +369,7 @@ def cmd_request(args):
     # Save to history
     save_to_history(args.method, url, headers, body, response)
     
-    print(f"\n{Colors.GREEN}✓ Request saved to history{Colors.RESET}")
+    print(f"\n{Colors.GREEN}[OK] Request saved to history{Colors.RESET}")
 
 
 def cmd_history(args):
@@ -418,7 +418,7 @@ def cmd_replay(args):
         index = -args.number
         entry = history[index]
     except IndexError:
-        print(f"{Colors.RED}✗ Invalid history index: {args.number}{Colors.RESET}")
+        print(f"{Colors.RED}[X] Invalid history index: {args.number}{Colors.RESET}")
         return
     
     # Recreate request
@@ -453,12 +453,12 @@ def cmd_env(args):
     
     if args.action == 'set':
         if not args.key or not args.value:
-            print(f"{Colors.RED}✗ Both key and value required for 'set'{Colors.RESET}")
+            print(f"{Colors.RED}[X] Both key and value required for 'set'{Colors.RESET}")
             return
         
         env[args.key] = args.value
         save_json(ENV_FILE, env)
-        print(f"{Colors.GREEN}✓ Set {args.key} = {args.value}{Colors.RESET}")
+        print(f"{Colors.GREEN}[OK] Set {args.key} = {args.value}{Colors.RESET}")
     
     elif args.action == 'get':
         if args.key:
@@ -468,7 +468,7 @@ def cmd_env(args):
             else:
                 print(f"{Colors.YELLOW}Variable '{args.key}' not found{Colors.RESET}")
         else:
-            print(f"{Colors.RED}✗ Key required for 'get'{Colors.RESET}")
+            print(f"{Colors.RED}[X] Key required for 'get'{Colors.RESET}")
     
     elif args.action == 'list':
         if not env:
@@ -481,13 +481,13 @@ def cmd_env(args):
     
     elif args.action == 'delete':
         if not args.key:
-            print(f"{Colors.RED}✗ Key required for 'delete'{Colors.RESET}")
+            print(f"{Colors.RED}[X] Key required for 'delete'{Colors.RESET}")
             return
         
         if args.key in env:
             del env[args.key]
             save_json(ENV_FILE, env)
-            print(f"{Colors.GREEN}✓ Deleted {args.key}{Colors.RESET}")
+            print(f"{Colors.GREEN}[OK] Deleted {args.key}{Colors.RESET}")
         else:
             print(f"{Colors.YELLOW}Variable '{args.key}' not found{Colors.RESET}")
 
@@ -498,7 +498,7 @@ def cmd_collection(args):
     
     if args.action == 'save':
         if not args.name:
-            print(f"{Colors.RED}✗ Collection name required{Colors.RESET}")
+            print(f"{Colors.RED}[X] Collection name required{Colors.RESET}")
             return
         
         # Get last request from history
@@ -513,11 +513,11 @@ def cmd_collection(args):
         collection_file = COLLECTIONS_DIR / f"{args.name}.json"
         save_json(collection_file, last_request)
         
-        print(f"{Colors.GREEN}✓ Saved last request to collection '{args.name}'{Colors.RESET}")
+        print(f"{Colors.GREEN}[OK] Saved last request to collection '{args.name}'{Colors.RESET}")
     
     elif args.action == 'load':
         if not args.name:
-            print(f"{Colors.RED}✗ Collection name required{Colors.RESET}")
+            print(f"{Colors.RED}[X] Collection name required{Colors.RESET}")
             return
         
         collection_file = COLLECTIONS_DIR / f"{args.name}.json"
@@ -568,13 +568,13 @@ def cmd_collection(args):
     
     elif args.action == 'delete':
         if not args.name:
-            print(f"{Colors.RED}✗ Collection name required{Colors.RESET}")
+            print(f"{Colors.RED}[X] Collection name required{Colors.RESET}")
             return
         
         collection_file = COLLECTIONS_DIR / f"{args.name}.json"
         if collection_file.exists():
             collection_file.unlink()
-            print(f"{Colors.GREEN}✓ Deleted collection '{args.name}'{Colors.RESET}")
+            print(f"{Colors.GREEN}[OK] Deleted collection '{args.name}'{Colors.RESET}")
         else:
             print(f"{Colors.YELLOW}Collection '{args.name}' not found{Colors.RESET}")
 

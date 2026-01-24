@@ -2,7 +2,7 @@
 
 # 🌐 RestCLI - Smart REST API Testing Tool
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Author:** Logan Smith / Metaphy LLC  
 **License:** MIT  
 **GitHub:** https://github.com/DonkRonk17/RestCLI

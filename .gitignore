@@ -16,33 +16,40 @@ parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
 # Virtual environments
+.env
+.venv
+env/
 venv/
 ENV/
-env/
 
 # IDE
-.vscode/
 .idea/
+.vscode/
 *.swp
 *.swo
 *~
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Testing
+# Test artifacts
 .pytest_cache/
 .coverage
 htmlcov/
+test_data.json
 
-# User data (for local testing)
-test_data/
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# RestCLI data (user-specific, not in repo)
+# Note: Actual user data is in ~/.restcli/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.log
